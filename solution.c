@@ -29,6 +29,17 @@ thread_count = strtol(argv[1], NULL, 10);
 
 thread_handles = malloc(thread_count*sizeof(pthread_t));
 
+int ***A;
+
+int ***B;
+
+int n;
+
+lab1_loadinput(&A, &B, &n);
+
+
+
+
 
 
 }
