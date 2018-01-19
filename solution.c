@@ -73,89 +73,16 @@ void *pMatrixMulti(void* rank)
 	int i_bot = (n/sqrt(thread_count))*x;
 	int i_top = (n/sqrt(thread_count))*(x+1)-1;
 
-	int i_range = abs(i_top - i_bot);
 
 	int j_bot = (n/sqrt(thread_count))*y;
 	int j_top = (n/sqrt(thread_count))*(y+1)-1;
 
-	int j_range = abs(j_top - j_bot);
-
-	//printf("k: %i\n",k );
-	//printf("i_bot: %i i_top: %i j_bot: %i j_top: %i\n",i_bot, i_top, j_bot, j_top );
-
-	int **p_A;
-	int **p_B;
-	int **p_C;
-
-	p_A = malloc(i_range * sizeof(int*));
-	p_B = malloc(i_range * sizeof(int*));
-	p_C = malloc(i_range * sizeof(int*));
-
-	int i;
-	int j;
-
-	for (i = 0; i <= i_range; i++)
-	{
-	  (p_A)[i] = malloc(j_range * sizeof(int));
-	}
-	for (i = 0; i <= i_range; i++)
-	{
-	  (p_B)[i] = malloc(j_range * sizeof(int));
-	}
-	for (i = 0; i <= i_range; i++)
-	{
-	  (p_C)[i] = malloc(j_range * sizeof(int));
-	}
-
-
-	//printf("i_range: %i, j_range: %i\n",i_range, j_range );
-	int p_i;
-	int p_j;
-
-    for (i = i_bot, p_i = 0; p_i <= i_range; i++, p_i++)
-    {
-        for (j = j_bot, p_j = 0; p_j <= j_range; j++, p_j++)
-        {
-        	p_A[p_i][p_j] = A[i][j];
-        }
-
-    }
-
-    for (i = i_bot, p_i = 0; p_i <= i_range; i++, p_i++)
-    {
-        for (j = j_bot, p_j = 0; p_j <= j_range; j++, p_j++)
-        {
-        	p_B[p_i][p_j] = B[i][j];
-        }
-
-    }
 
 
   	matrixMulti(i_bot, i_top, j_bot, j_top, n);
 
-    // for (i = i_bot, p_i = 0; p_i <= i_range; i++, p_i++)
-    // {
-    //     for (j = j_bot, p_j = 0; p_j <= j_range; j++, p_j++)
-    //     {
-    //     	C[i][j] = p_C[p_i][p_j];
-    //     }
-
-    // }
-
- //  	printf("p_A:\n");
- //  	printM(p_A, i_range);
- //  	printf("p_B:\n");
- //  	printM(p_B, i_range);
-	// printf("p_C:\n");
- //  	printM(p_C, i_range);
     return NULL;
 
-}
-
-void *Hello(void* rank) {
-	long my_rank = (long) rank; /* Use long in case of 64-bit system */
-	printf("Hello from thread %ld of %d\n", my_rank, thread_count);
-	return NULL;
 }
 
 int main (int argc, char* argv[])
@@ -176,9 +103,6 @@ thread_count = strtol(argv[1], NULL, 10);
 
 thread_handles = malloc(thread_count*sizeof(pthread_t));
 
-
-
-
 Lab1_loadinput(&A, &B, &n);
 
 //printM(A, n);
@@ -191,12 +115,6 @@ for (i = 0; i < n; i++)
   (C)[i] = malloc(n * sizeof(int));
 }
 
-//int partitions = n/sqrt(thread_count);
-
-//printf("%i\n", partitions);
-
-//printf("C:\n");
-//printM(C, n);
 for (thread = 0; thread < thread_count; thread++)
 {	
 	pthread_create(&thread_handles[thread], NULL, pMatrixMulti, (void*) thread);
@@ -207,17 +125,6 @@ for (thread = 0; thread < thread_count; thread++)
 	pthread_join(thread_handles[thread], NULL);
 }
 
-
-// int k;
-// for (k = 0; k < thread_count; k++)
-// {
-	
-//  //  	printf("p_A:\n");
-//  //  	printM(p_A, i_range);
-//  //  	printf("p_B:\n");
-//  //  	printM(p_B, i_range);
-// 	// printf("p_C:\n");
-//  //  	printM(p_C, i_range);
 
 
 
@@ -234,14 +141,14 @@ for (thread = 0; thread < thread_count; thread++)
 	return 0;
 
 }
-/*-18 -33 12 -17 0 23 -22 -4 3 0
--7 12 13 18 0 11 -7 8 6 0
--5 -15 -2 -18 0 -2 -7 -14 -17 0
--19 9 1 5 0 -9 17 38 -12 0
-0 0 0 0 0 0 0 0 0 0
-0 -21 -19 -3 0 4 20 14 -2 0
--4 -6 -8 -8 0 9 21 -7 6 0
--8 11 -15 -14 0 0 5 14 -7 0
--9 23 2 3 0 9 2 -15 -15 0
-0 0 0 0 0 0 0 0 0 0*/
+/*-19 -30 27 -42 -36 -9 10 -42 -5 16
+-7 2 18 -8 -1 5 -10 -14 -49 10
+13 -8 10 -14 0 -25 -23 -7 5 -22
+-34 0 -2 -33 32 9 51 36 -62 18
+10 -28 21 -28 -1 23 40 8 11 -37
+0 -20 31 -39 1 -4 9 -4 -5 -21
+-7 32 16 -10 -49 -4 17 2 2 -20
+-35 -10 -10 -20 27 -32 39 35 -22 37
+-1 -18 -32 -1 -19 15 19 -16 11 19
+1 -44 -33 -8 100 -24 -43 -24 -27 14*/
 
