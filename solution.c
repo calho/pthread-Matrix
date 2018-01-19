@@ -14,7 +14,7 @@ const int MAX_THREADS = 64;
 int thread_count;
 int n;
 
-int matrixMulti (int** matrix_A, int** matrix_B, int** matrix_C, int size)
+int matrixMulti (int i_bot, int i_top, int j_bot, int j_top, int size)
 {
 	// C = malloc(n * sizeof(int*));
 
@@ -27,17 +27,17 @@ int matrixMulti (int** matrix_A, int** matrix_B, int** matrix_C, int size)
 	//   (C)[i] = malloc(n * sizeof(int));
 	// }
 
-	for (i = 0; i < size; i++)
+	for (i = i_bot; i <= i_top; i++)
 	{
-		for (j = 0; j < size; j++)
+		for (j = j_bot; j <= j_top; j++)
 		{
 			int sum = 0;
 			for (k = 0; k < size; k++)
 			{
-				sum += matrix_A[i][k] * matrix_B[k][j];
+				sum += A[i][k] * B[k][j];
 			}
 
-			matrix_C[i][j] = sum;		
+			C[i][j] = sum;		
 		}
 	}
 	return 0;
@@ -131,16 +131,16 @@ void *pMatrixMulti(void* rank)
     }
 
 
-  	matrixMulti(p_A, p_B, p_C, i_range);
+  	matrixMulti(i_bot, i_top, j_bot, j_top, n);
 
-    for (i = i_bot, p_i = 0; p_i <= i_range; i++, p_i++)
-    {
-        for (j = j_bot, p_j = 0; p_j <= j_range; j++, p_j++)
-        {
-        	C[i][j] = p_C[p_i][p_j];
-        }
+    // for (i = i_bot, p_i = 0; p_i <= i_range; i++, p_i++)
+    // {
+    //     for (j = j_bot, p_j = 0; p_j <= j_range; j++, p_j++)
+    //     {
+    //     	C[i][j] = p_C[p_i][p_j];
+    //     }
 
-    }
+    // }
 
  //  	printf("p_A:\n");
  //  	printM(p_A, i_range);
@@ -227,11 +227,21 @@ for (thread = 0; thread < thread_count; thread++)
 	// printf("B: \n");
 	// printM(B, n);
 	// printf("C: \n");
-	// printM(C, n);
+	printM(C, n);
 
 	// printf("done\n");
 
 	return 0;
 
 }
+/*-18 -33 12 -17 0 23 -22 -4 3 0
+-7 12 13 18 0 11 -7 8 6 0
+-5 -15 -2 -18 0 -2 -7 -14 -17 0
+-19 9 1 5 0 -9 17 38 -12 0
+0 0 0 0 0 0 0 0 0 0
+0 -21 -19 -3 0 4 20 14 -2 0
+-4 -6 -8 -8 0 9 21 -7 6 0
+-8 11 -15 -14 0 0 5 14 -7 0
+-9 23 2 3 0 9 2 -15 -15 0
+0 0 0 0 0 0 0 0 0 0*/
 
